@@ -1,0 +1,17 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: 1db56dac-3bad-4960-99b1-b0359dbf42c4
+  # title:
+  # description:
+  # keywords: []
+  # authors: []
+  github: https://github.com/wenbinyugroup/msg-examples
+  # To autogenerate a Table of Contents, run "myst init --write-toc"
+  exclude:
+    - README.md
+site:
+  template: book-theme
+  # options:
+  #   favicon: favicon.ico
+  #   logo: site_logo.png

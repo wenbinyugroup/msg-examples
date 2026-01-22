@@ -1,0 +1,15 @@
+[project]
+name = "msg-examples"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.10.8",
+    "mystmd>=1.8.0",
+    "notebook>=7.5.2",
+    "numpy>=2.2.6",
+    "plotly>=6.5.2",
+    "pyvista>=0.46.5",
+    "scipy>=1.15.3",
+]
