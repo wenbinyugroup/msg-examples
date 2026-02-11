@@ -2,6 +2,7 @@
 version: 1
 project:
   id: 1db56dac-3bad-4960-99b1-b0359dbf42c4
+  jupyter: true
   # title:
   # description:
   # keywords: []
@@ -10,6 +11,11 @@ project:
   # To autogenerate a Table of Contents, run "myst init --write-toc"
   exclude:
     - README.md
+    - AGENTS.md
+    - local/**
+    - scripts/**
+    - .venv/**
+    - .vscode/**
 site:
   template: book-theme
   # options:

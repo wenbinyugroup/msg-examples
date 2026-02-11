@@ -5,11 +5,23 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "anywidget>=0.9.21",
+    "gmsh>=4.15.0",
+    "ipywidgets>=8.1.8",
+    "jupyter-server-proxy>=4.4.0",
+    "jupyterlab>=4.5.2",
     "matplotlib>=3.10.8",
     "mystmd>=1.8.0",
     "notebook>=7.5.2",
     "numpy>=2.2.6",
+    "pandas>=2.3.3",
     "plotly>=6.5.2",
-    "pyvista>=0.46.5",
+    "pyvista[all,trame]>=0.46.5",
     "scipy>=1.15.3",
+    "sgio",
+    "trame>=3.12.0",
+    "trame-vtk>=2.11.1",
 ]
+
+[tool.uv.sources]
+sgio = { path = "../sgio", editable = true }
