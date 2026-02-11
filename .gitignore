@@ -1,6 +1,12 @@
 .vscode/
 local/
+
+# Python
 .venv/
+__pycache__/
 
 # MyST build outputs
 _build
+
+# Other
+evals/

@@ -1,23 +1,60 @@
+# MyST Configuration for MSG Examples
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
 project:
   id: 1db56dac-3bad-4960-99b1-b0359dbf42c4
+  title: MSG Examples
+  description: Examples demonstrating the use of VABS/SwiftComp for structural analysis using the Mechanics of Structure Genome (MSG) approach
+  keywords:
+    - VABS
+    - SwiftComp
+    - Structural Analysis
+    - Composite Materials
+    - Homogenization
+    - Mechanics of Structure Genome
+  authors:
+    - name: Wenbin Yu Research Group
   jupyter: true
-  # title:
-  # description:
-  # keywords: []
-  # authors: []
   github: https://github.com/wenbinyugroup/msg-examples
-  # To autogenerate a Table of Contents, run "myst init --write-toc"
+
+  toc:
+    - file: main.md
+    - file: examples/index.md
+    - file: doc/EXAMPLE_GUIDELINES.md
+
+  # Files and directories to exclude from the build
   exclude:
     - README.md
     - AGENTS.md
     - local/**
+    - others/**
     - scripts/**
     - .venv/**
     - .vscode/**
+    - "**/__pycache__/**"
+    - "**/*.pyc"
+    - "**/run.log"
+    - "examples/_template/**"  # Template not included in site
+    - "examples/**/evals/**"   # Exclude individual case outputs
+    - "examples/**/results/**/*.sg*"  # Exclude intermediate files
+    
 site:
   template: book-theme
-  # options:
-  #   favicon: favicon.ico
-  #   logo: site_logo.png
+  title: MSG Examples
+  options:
+    logo_text: MSG Examples
+    # Uncomment and add if you have these assets:
+    # favicon: favicon.ico
+    # logo: images/site_logo.png
+  # nav:
+  #   - title: Home
+  #     url: /
+  #   - title: Examples
+  #     children:
+  #       - title: GMSH Tutorial 18
+  #         url: /examples/gmsh_t18/README
+  #       # Add more examples here as they are created
+  #   # - title: Guidelines
+  #   #   url: /doc/EXAMPLE_GUIDELINES
+  #   - title: GitHub
+  #     url: https://github.com/wenbinyugroup/msg-examples

@@ -8,8 +8,6 @@ def convert_sg(
     fn_sg_out='sg.sg'
     ):
 
-    # fn = 'sg.msh'
-
     sg = sgio.read(fn_sg_in, file_format='gmsh')
     # print(sg)
 

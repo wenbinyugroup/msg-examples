@@ -1,0 +1,8 @@
+radii=array([0.1 , 0.15, 0.2 , 0.25, 0.3 , 0.35, 0.4 ])
+Running for radius: 0.1
+Running for radius: 0.15000000000000002
+Running for radius: 0.2
+Running for radius: 0.25
+Running for radius: 0.30000000000000004
+Running for radius: 0.3500000000000001
+Running for radius: 0.4
