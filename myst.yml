@@ -20,6 +20,13 @@ project:
   toc:
     - file: main.md
     - file: examples/index.md
+      children:
+        - file: examples/gmsh_t18/README.md
+          children:
+            - file: examples/gmsh_t18/visualization.ipynb
+              hidden: true
+        # - pattern: 'examples/**/*.md'
+        # - pattern: 'examples/**/*.ipynb'
     - file: doc/EXAMPLE_GUIDELINES.md
 
   # Files and directories to exclude from the build
