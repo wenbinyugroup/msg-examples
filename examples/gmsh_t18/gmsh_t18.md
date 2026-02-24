@@ -1,12 +1,20 @@
 ---
-title: "Gmsh Tutorial 18"
+title: "Particle Reinforced Composite"
+subtitle: "How to link Gmsh and SwiftComp for microstructural homogenization"
+short_title: "Particle Reinforced Composite"
 description: Parametric study of particle volume fraction effects on effective engineering constants using SwiftComp
-short_title: Gmsh T18
 authors:
   - name: Su Tian
     affiliations:
       - AnalySwift
 date: 2026-02-11
+banner: https://gmsh.info/doc/texinfo/images/t18.png
+label: "gmsh-sc-sg3d"
+tags:
+  - gmsh
+  - 3d_sg
+  - swiftcomp
+  - composites
 keywords:
   - SwiftComp
   - Composite Materials
@@ -15,7 +23,7 @@ keywords:
   - Particle Reinforced Composites
 ---
 
-# Gmsh Tutorial 18
+# Particle Reinforced Composite Material
 
 ## Overview
 
@@ -105,7 +113,7 @@ In general, the analysis workflow consists of the following steps:
 
 ### Geometry Generation with Gmsh
 
-The SG geometry is created using the Gmsh Python API in [`build_sg.py`](./build_sg.py:1) based on the official script [`t18.py`](https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_15_0/tutorials/python/t18.py).
+The SG geometry is created using the Gmsh Python API in {download}`build_sg.py` based on the official script [`t18.py`](https://gitlab.onelab.info/gmsh/gmsh/blob/gmsh_4_15_0/tutorials/python/t18.py).
 The script is modified in the following ways:
 - Setting periodicity is converted to a function and applied to all three pairs of faces.
 - Add physical groups for matrix and inclusion volumes to store material assignments.
@@ -119,7 +127,7 @@ The script is modified in the following ways:
 
 ### Format Conversion
 
-The [`convert.py`](./convert.py:1) script handles the format conversion from Gmsh to SwiftComp.
+The {download}`convert.py` script handles the format conversion from Gmsh to SwiftComp.
 The overall steps are straightforward and as follows:
 1. Read the Gmsh mesh file
 2. Add materials to the model
@@ -133,7 +141,7 @@ The overall steps are straightforward and as follows:
 
 ### Main Parametric Study
 
-The parametric study sweeps through inclusion radii and computes effective properties for each case. Implementation in [`run.py`](./run.py:20):
+The parametric study sweeps through inclusion radii and computes effective properties for each case. Implementation in {download}`run.py`:
 
 :::{literalinclude} run.py
 :language: python
@@ -144,6 +152,6 @@ The parametric study sweeps through inclusion radii and computes effective prope
 
 ## Results and Visualization
 
-The results are saved to `results/t18_results.csv` and can be visualized using the Jupyter notebook [`visualization.ipynb`](./visualization.ipynb).
+The results are saved to `results/t18_results.csv` and can be visualized using the Jupyter notebook {download}`visualization.ipynb`.
 
 ![](#fig-t18-results)
