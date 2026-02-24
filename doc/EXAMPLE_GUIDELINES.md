@@ -18,16 +18,16 @@ Each example should follow this structure:
 
 ```
 examples/your_example/
-├── README.md              # Main documentation (MyST Markdown)
+├── your_example.md        # Main documentation (MyST Markdown)
 ├── run.py                 # Main analysis script
 ├── other_scripts.py       # (if applicable)
 ├── visualization.ipynb    # Interactive visualizations
-├── data/                 # Input files
+├── data/                  # Input files
 │   ├── materials.json
 │   └── geometry.msh
-├── results/              # Output files  
+├── results/               # Output files  
 │   └── results.csv
-└── images/               # Figures for documentation
+└── images/                # Figures for documentation
     └── geometry.png
 ```
 
