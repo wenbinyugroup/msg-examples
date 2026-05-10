@@ -1,0 +1,15 @@
+[project]
+name = "example-name"
+version = "0.1.0"
+description = "Replace with a short summary of the example"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+plotting = []
+notebook = []
+
+[tool.uv.sources]
+# Uncomment and adapt when the example depends on local packages.
+# sgio = { path = "../../../sgio", editable = true }

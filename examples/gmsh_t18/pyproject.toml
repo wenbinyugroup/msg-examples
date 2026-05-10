@@ -1,0 +1,21 @@
+[project]
+name = "gmsh-t18"
+version = "0.1.0"
+description = "Particle-reinforced composite homogenization example using Gmsh and SwiftComp"
+readme = "gmsh_t18.md"
+requires-python = ">=3.10"
+dependencies = [
+    "gmsh",
+    "numpy",
+    "pandas",
+    "sgio",
+]
+
+[project.optional-dependencies]
+notebook = [
+    "jupyterlab",
+    "plotly",
+]
+
+[tool.uv.sources]
+sgio = { path = "../../../sgio", editable = true }
