@@ -8,6 +8,18 @@ dependencies = [
     "mystmd",
 ]
 
+[project.optional-dependencies]
+plotting = [
+    "matplotlib",
+    "plotly",
+]
+notebook = [
+    "ipywidgets",
+    "jupyter-server-proxy",
+    "jupyterlab",
+    "notebook",
+]
+
 [dependency-groups]
 dev = [
     "ruff",

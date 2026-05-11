@@ -1,0 +1,6 @@
+coord_seligFmt/
+*.geo_unrolled
+*.log
+*.dcel_dump.*
+evals_*/
+test*/

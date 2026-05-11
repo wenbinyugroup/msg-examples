@@ -1,0 +1,25 @@
+{
+  "airfoil_dir": "coord_seligFmt",
+  "working_dir": "evals_skin_al_001",
+  "airfoil_files": null,
+  "sample_size": 100,
+  "seed": 0,
+  "jobs": 10,
+  "solver_timeout": 10,
+  "failed_case": "continue",
+  "properties": ["mu", "ea", "gj", "ga22", "ga33", "ei22", "ei33", "tc2", "tc3", "sc2", "sc3"],
+  "output_csv": "results_skin_al_001.csv",
+  "material_file": "data/materials.xml",
+  "template_file": "data/airfoil_skin_only.template.xml",
+  "template_params": {
+    "mesh_size": 0.0025,
+    "element_shape": "tri",
+    "element_type": "linear",
+    "translate_x": -0.25,
+    "translate_y": 0.0,
+    "scale": 1.0,
+    "material_name": "al_alloy",
+    "lamina_thickness": 0.01,
+    "fiber_angle": 0.0
+  }
+}

@@ -12,10 +12,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-notebook = [
-    "jupyterlab",
+plotting = [
     "plotly",
 ]
-
-[tool.uv.sources]
-sgio = { path = "../../../sgio", editable = true }
+notebook = [
+    "ipywidgets",
+    "jupyter-server-proxy",
+    "jupyterlab",
+    "notebook",
+]

@@ -1,0 +1,37 @@
+<cross_section name="airfoil_skin_only">
+
+  <include>
+    <material>{material_file_stem}</material>
+  </include>
+
+  <analysis>
+    <!-- Timoshenko beam model -->
+    <model>1</model>
+  </analysis>
+
+
+  <general>
+    <translate>{translate_x} {translate_y}</translate>
+    <scale>{scale}</scale>
+    <mesh_size>{mesh_size}</mesh_size>
+    <element_shape>{element_shape}</element_shape>
+    <element_type>{element_type}</element_type>
+  </general>
+
+  <baselines>
+
+    <line name="ln_af" type="airfoil">
+      <points data="file" format="1" header="1">{airfoil_file}</points>
+      <leading_edge>{le_x} {le_y}</leading_edge>
+      <trailing_edge>{te_x} {te_y}</trailing_edge>
+    </line>
+
+  </baselines>
+
+  <component name="main" type="fill">
+    <baseline>ln_af</baseline>
+    <location>qc</location>
+    <material>{material_name}</material>
+  </component>
+
+</cross_section>

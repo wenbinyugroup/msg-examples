@@ -7,6 +7,7 @@ Examples demonstrating the use of VABS/SwiftComp for structural analysis using t
 This repository uses two dependency layers:
 
 - The repository root environment is only for shared tooling such as `mystmd`.
+- The repository root also defines shared optional extras for common notebook and plotting stacks.
 - Each directory under `examples/` is an independent Python project with its own `pyproject.toml` and `.venv`.
 
 This keeps incompatible example dependencies isolated and allows users to install only the examples they care about.
@@ -46,6 +47,12 @@ doc/
 ```bash
 uv sync
 uv run myst start
+```
+
+If you work on many examples locally, you can install the shared optional stacks once in the root environment:
+
+```bash
+uv sync --extra plotting --extra notebook
 ```
 
 **Run one example**: change into that example directory and sync only its dependencies.

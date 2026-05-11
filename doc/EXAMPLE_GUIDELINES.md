@@ -112,6 +112,7 @@ uv run myst init --check-frontmatter
 Every example under `examples/` should be treated as an independent Python project.
 
 - Put repository-wide tools in the root `pyproject.toml`.
+- Reuse the shared extra names `plotting` and `notebook` for common optional stacks.
 - Put example runtime dependencies in that example's `pyproject.toml`.
 - Use optional dependencies for non-essential features such as plotting, notebooks, or heavy visualization stacks.
 - Do not add example-specific runtime packages to the repository root just because another example already uses them.
@@ -131,8 +132,10 @@ plotting = [
   "plotly",
 ]
 notebook = [
-  "jupyterlab",
   "ipywidgets",
+  "jupyter-server-proxy",
+  "jupyterlab",
+  "notebook",
 ]
 ```
 
