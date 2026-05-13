@@ -1,0 +1,9 @@
+[project]
+name = "sg23-udfrc-gmsh-sc"
+version = "0.1.0"
+description = "Square fiber-matrix structure genome mesh generation example using Gmsh"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "gmsh",
+]

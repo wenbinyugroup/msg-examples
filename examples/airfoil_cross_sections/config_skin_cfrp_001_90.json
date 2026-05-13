@@ -1,0 +1,34 @@
+{
+  "airfoil_dir": "coord_seligFmt",
+  "working_dir": "evals_skin_cfrp_001_90",
+  "airfoil_files": null,
+  "sample_size": null,
+  "seed": 0,
+  "jobs": 10,
+  "solver_timeout": 10,
+  "failed_case": "continue",
+  "properties": [
+    "mu",
+    "ea", "gj", "ga22", "ga33", "ei22", "ei33",
+    "cmp12r", "cmp13r", "cmp14r", "cmp15r", "cmp16r",
+    "cmp23r", "cmp24r", "cmp25r", "cmp26r",
+    "cmp34r", "cmp35r", "cmp36r",
+    "cmp45r", "cmp46r",
+    "cmp56r",
+    "tc2", "tc3", "sc2", "sc3"
+  ],
+  "output_csv": "results_skin_cfrp_001_90.csv",
+  "material_file": "data/materials.xml",
+  "template_file": "data/airfoil_skin_only.template.xml",
+  "template_params": {
+    "mesh_size": 0.0025,
+    "element_shape": "tri",
+    "element_type": "linear",
+    "translate_x": -0.25,
+    "translate_y": 0.0,
+    "scale": 1.0,
+    "material_name": "carbon_epoxy_ud",
+    "lamina_thickness": 0.01,
+    "fiber_angle": 90
+  }
+}

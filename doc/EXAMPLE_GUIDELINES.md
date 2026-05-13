@@ -44,28 +44,25 @@ examples/your_example/
 
 ### Environment setup
 
+Repository-level documentation tooling:
+
 ```bash
 uv sync
-
-# Add packages if needed
-uv add <package>
 ```
 
-To activate the virtual environment:
+Example-specific runtime dependencies:
 
 ```bash
-# Windows PowerShell
-.venv\Scripts\activate.ps1
-
-# Unix
-source .venv/bin/activate
+cd examples/your_example
+uv add numpy pandas
+uv sync
 ```
 
 ### Local Development
 
 ```bash
 # Start local server
-myst start
+uv run myst start
 
 # Open in browser: http://localhost:3000
 ```
@@ -74,26 +71,26 @@ myst start
 
 ```bash
 # Build website
-myst build --html
+uv run myst build --html
 
 # Build PDF
-myst build --pdf
+uv run myst build --pdf
 
 # Build Word document
-myst build --docx
+uv run myst build --docx
 
 # Build all
-myst build --all
+uv run myst build --all
 ```
 
 ### Checking for Errors
 
 ```bash
 # Check for broken links
-myst build --check-links
+uv run myst build --check-links
 
 # Validate frontmatter
-myst init --check-frontmatter
+uv run myst init --check-frontmatter
 ```
 
 ---
@@ -109,6 +106,53 @@ myst init --check-frontmatter
 
 - **Reference Example**: See `examples/gmsh_t18/` for fully documented example
 - **Template**: Use `examples/_template/` as starting point
+
+## Dependency Management Policy
+
+Every example under `examples/` should be treated as an independent Python project.
+
+- Put repository-wide tools in the root `pyproject.toml`.
+- Reuse the shared extra names `plotting` and `notebook` for common optional stacks.
+- Put example runtime dependencies in that example's `pyproject.toml`.
+- Use optional dependencies for non-essential features such as plotting, notebooks, or heavy visualization stacks.
+- Do not add example-specific runtime packages to the repository root just because another example already uses them.
+
+Recommended pattern:
+
+```toml
+[project]
+dependencies = [
+  "numpy",
+  "pandas",
+]
+
+[project.optional-dependencies]
+plotting = [
+  "matplotlib",
+  "plotly",
+]
+notebook = [
+  "ipywidgets",
+  "jupyter-server-proxy",
+  "jupyterlab",
+  "notebook",
+]
+```
+
+Typical commands:
+
+```bash
+# Install only the base dependencies for one example
+cd examples/your_example
+uv sync
+
+# Add a required runtime dependency
+uv add scipy
+
+# Add an optional dependency to a named extra
+uv add --optional plotting matplotlib
+uv add --optional notebook jupyterlab ipywidgets
+```
 
 ### Getting Help
 

@@ -80,25 +80,27 @@ gmsh_t18/
 :::{note}
 **Prerequisites:**
 - SwiftComp installed and accessible in PATH
-- Python packages: `sgio`, `gmsh`, `numpy`, `pandas`, `plotly`
+- Python dependencies declared in `pyproject.toml`
 :::
 
 Execute the complete parametric study:
 
 ```bash
-# Install dependencies
+# Install only this example's dependencies
+cd examples/gmsh_t18
 uv sync
 
-# Activate virtual environment (see AGENTS.md)
-.venv\Scripts\activate.ps1  # Windows
-# or: source .venv/bin/activate  # Unix
-
-# Run the parametric study
-cd examples\gmsh_t18
-python run.py
+# Run the parametric study in the example environment
+uv run python run.py
 
 # Results saved to results/t18_results.csv
 # Individual case files in evals/ directory
+```
+
+If you want the notebook visualization dependencies as well:
+
+```bash
+uv sync --extra notebook
 ```
 
 

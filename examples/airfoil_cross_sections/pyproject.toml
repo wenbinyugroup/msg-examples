@@ -1,0 +1,27 @@
+[project]
+name = "airfoil-cross-sections"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "airfoils",
+    "matplotlib",
+    "pandas>=3.0.2",
+    "sgio>=0.5",
+]
+
+[tool.uv.sources]
+airfoils = { git = "https://github.com/cadascode/airfoils.git", rev = "a55a5a0e35ffa3e6284e9e14baf34d3daf43cf6f" }
+
+[project.optional-dependencies]
+plotting = [
+    "plotly",
+]
+notebook = [
+    "ipywidgets",
+    "anywidget",
+    "jupyter-server-proxy",
+    "jupyterlab",
+    "notebook",
+]

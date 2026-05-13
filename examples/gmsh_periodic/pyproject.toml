@@ -1,0 +1,9 @@
+[project]
+name = "gmsh-periodic"
+version = "0.1.0"
+description = "Minimal periodic meshing example using the Gmsh Python API"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "gmsh",
+]

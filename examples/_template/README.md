@@ -25,7 +25,7 @@ Brief summary paragraph introducing the example. Explain what structural analysi
 :::{note}
 **Prerequisites:**
 - SwiftComp or VABS installed and accessible in PATH
-- Python packages: `sgio`, `numpy`, `pandas`
+- Python dependencies declared in `pyproject.toml`
 - [Any other specific requirements]
 :::
 
@@ -89,6 +89,7 @@ This section explains the computational implementation using a modular approach.
 ```
 example_name/
 ├── README.md              # This file - main documentation
+├── pyproject.toml         # Example-specific Python dependencies
 ├── run.py                 # Main analysis script
 ├── build_sg.py           # Structure genome generation
 ├── visualization.ipynb    # Interactive visualizations
@@ -158,13 +159,19 @@ For large parametric studies, consider parallelizing the loop using `multiproces
 To execute the complete analysis:
 
 ```bash
-# Activate your virtual environment
-source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+# Install only this example's dependencies
+uv sync
 
 # Run the main analysis script
-python run.py
+uv run python run.py
 
 # Results will be saved to results/results.csv
+```
+
+If the example uses optional notebook or plotting dependencies:
+
+```bash
+uv sync --extra plotting --extra notebook
 ```
 
 ## Results

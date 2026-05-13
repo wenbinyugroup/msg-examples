@@ -1,16 +1,18 @@
 [project]
-name = "msg-examples"
+name = "gmsh-t18"
 version = "0.1.0"
-description = "Repository-level tooling for the MSG examples collection"
-readme = "README.md"
+description = "Particle-reinforced composite homogenization example using Gmsh and SwiftComp"
+readme = "gmsh_t18.md"
 requires-python = ">=3.10"
 dependencies = [
-    "mystmd",
+    "gmsh",
+    "numpy",
+    "pandas",
+    "sgio",
 ]
 
 [project.optional-dependencies]
 plotting = [
-    "matplotlib",
     "plotly",
 ]
 notebook = [
@@ -18,9 +20,4 @@ notebook = [
     "jupyter-server-proxy",
     "jupyterlab",
     "notebook",
-]
-
-[dependency-groups]
-dev = [
-    "ruff",
 ]
