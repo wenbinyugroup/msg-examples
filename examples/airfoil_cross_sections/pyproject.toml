@@ -20,6 +20,7 @@ plotting = [
 ]
 notebook = [
     "ipywidgets",
+    "anywidget",
     "jupyter-server-proxy",
     "jupyterlab",
     "notebook",

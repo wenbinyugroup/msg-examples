@@ -19,15 +19,17 @@ project:
 
   toc:
     - file: main.md
-    - file: examples/index.md
+    # - file: examples/index.md
+    #   children:
+    - file: examples/gmsh_t18/gmsh_t18.md
       children:
-        - file: examples/gmsh_t18/gmsh_t18.md
-          children:
-            - file: examples/gmsh_t18/visualization.ipynb
-              hidden: true
-        # - pattern: 'examples/**/*.md'
-        # - pattern: 'examples/**/*.ipynb'
-    - file: doc/EXAMPLE_GUIDELINES.md
+        - file: examples/gmsh_t18/visualization.ipynb
+          hidden: true
+    - file: examples/airfoil_cross_sections/airfoil-cs.md
+      children:
+        - file: examples/airfoil_cross_sections/plot.ipynb
+          hidden: true
+    # - file: doc/EXAMPLE_GUIDELINES.md
 
   # Files and directories to exclude from the build
   exclude:
@@ -44,7 +46,7 @@ project:
     - "examples/_template/**"  # Template not included in site
     - "examples/**/evals/**"   # Exclude individual case outputs
     - "examples/**/results/**/*.sg*"  # Exclude intermediate files
-    
+
 site:
   template: book-theme
   title: MSG Examples

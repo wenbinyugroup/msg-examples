@@ -1,48 +1,29 @@
 # MSG Examples
 
-Welcome to the **Mechanics of Structure Genome (MSG) Examples** repository! This collection demonstrates the use of VABS and SwiftComp for structural analysis of composite materials and structures.
+Welcome to the **Mechanics of Structure Genome (MSG) Examples**!
+This collection demonstrates the use of VABS and SwiftComp for structural analysis of composite materials and structures.
 
-[Examples](./examples/index.md)
+<!-- [Examples](./examples/index.md) -->
 
-## Getting Started
+::::{grid} 1 2 3 3
 
-1. **Download the repository**: `git clone https://github.com/wenbinyugroup/msg-examples.git`
-2. **Install dependencies**: `uv sync`
-3. **Browse examples**: Each example folder contains at least:
-   - `README.md` - Comprehensive documentation
-   - `run.py` - Analysis scripts
-   - `visualization.ipynb` - Interactive results
-4. **Run an example**:
-   ```bash
-   cd examples/gmsh_t18
-   python run.py
-   jupyter notebook visualization.ipynb
-   ```
+:::{card} Particle Reinforced Composite Material
+:link: ./examples/gmsh_t18/gmsh_t18.md
 
-## Resources
+![](https://gmsh.info/doc/texinfo/images/t18.png)
 
-### Documentation
+:::
 
-- [SGIO](https://wenbinyugroup.github.io/sgio/): Python interface for structure genome I/O
+:::{card} Batch Cross-sectional Analyses
+:link: ./examples/airfoil_cross_sections/airfoil-cs.md
 
-### Community
+![](./examples/airfoil_cross_sections/mh104_skin_only.png)
+
+:::
+
+
+::::
+
+## Community
 
 You're welcome to post any questions or comments on the [cdmHUB community](https://community.cdmhub.org/).
-
-### Contribution
-
-1. Clone or fork the repository
-2. Create a new branch for your example: `git checkout -b my_example`
-3. Copy the template: `cp -r examples/_template/ examples/my_example/`
-4. Implement your example in `my_example/`
-5. Test and build: `myst build --html`
-6. Submit a pull request
-
-More details in [Contribution Guidelines](./doc/EXAMPLE_GUIDELINES.md).
-
----
-
-**License**: See repository for license information  
-**Maintainer**: Wenbin Yu Research Group
-
-

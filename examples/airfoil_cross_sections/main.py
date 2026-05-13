@@ -371,7 +371,8 @@ async def run_airfoil_case(
 
         # Run PreVABS
         await run_solver_command(
-            ["prevabs", "-i", prevabs_input.name, "--hm", "-v", "--nopopup"],
+            ["prevabs", "-i", prevabs_input.name, "--hm"],
+            # ["prevabs", "-i", prevabs_input.name, "--hm", "-v", "--nopopup"],
             cwd=prevabs_input.parent,
             logger=logger,
             timeout=solver_timeout,
