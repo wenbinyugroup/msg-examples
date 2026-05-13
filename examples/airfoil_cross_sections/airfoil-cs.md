@@ -100,8 +100,9 @@ All materials are defined in [`materials.xml`](data/materials.xml).
 
 #### Standalone executables
 
-- [VABS](https://analyswift.com/products/vabs-cross-sectional-analysis-tool/)
+- [VABS 4.1](https://analyswift.com/products/vabs-cross-sectional-analysis-tool/)
 - [PreVABS](https://wenbinyugroup.github.io/prevabs/)
+  - [Download](https://github.com/wenbinyugroup/prevabs/releases/tag/v2.1.0-preview.20260508.3)
 
 #### Python dependencies
 
