@@ -13,14 +13,10 @@ This script performs the per-airfoil workflow:
 
 import argparse
 import asyncio
-from dataclasses import dataclass
-import re
 import shutil
 from pathlib import Path
 from typing import Any
 
-import airfoils
-from airfoils import fileio
 from helpers import (
     close_case_logger,
     create_case_logger,
@@ -28,6 +24,14 @@ from helpers import (
     resolve_path,
     run_solver_command,
     write_case_error_file,
+)
+from pre_process import (
+    ProcessedAirfoilData,
+    export_selig_airfoil_file,
+    find_thickness_location,
+    format_point,
+    process_airfoil_data,
+    round_with_precision,
 )
 
 
@@ -46,144 +50,6 @@ DEFAULT_TEMPLATE_PARAMS = {
     "material_nu": 3.30e-1,
     "lamina_thickness": 0.01,
 }
-
-
-@dataclass(frozen=True)
-class ProcessedAirfoilData:
-    """Processed airfoil data used by the case runner."""
-
-    title: str
-    upper: tuple[tuple[float, ...], tuple[float, ...]]
-    lower: tuple[tuple[float, ...], tuple[float, ...]]
-    x_precision: int
-    y_precision: int
-    le_point: tuple[float, float]
-    te_point: tuple[float, float]
-
-
-def infer_coordinate_precision(airfoil_file: str | Path) -> tuple[int, int]:
-    """Infer decimal precision for x/y coordinates from an airfoil file."""
-    coordinate_pattern = re.compile(r"[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?")
-    x_precision = 6
-    y_precision = 6
-
-    with Path(airfoil_file).open("r", encoding="utf-8") as infile:
-        for line_number, raw_line in enumerate(infile):
-            if line_number == 0:
-                continue
-
-            values = coordinate_pattern.findall(raw_line)
-            if len(values) < 2:
-                continue
-
-            x_precision = max(x_precision, _count_decimal_places(values[0]))
-            y_precision = max(y_precision, _count_decimal_places(values[1]))
-
-    return x_precision, y_precision
-
-
-def _count_decimal_places(value: str) -> int:
-    """Count decimal places in a numeric string, handling scientific notation."""
-    mantissa = value.lower().split("e", maxsplit=1)[0]
-    if "." not in mantissa:
-        return 0
-    return len(mantissa.split(".", maxsplit=1)[1])
-
-
-def format_point(point: tuple[float, float], x_precision: int, y_precision: int) -> tuple[str, str]:
-    """Format one point using the requested x/y decimal precision."""
-    return (
-        f"{point[0]:.{x_precision}f}",
-        f"{point[1]:.{y_precision}f}",
-    )
-
-
-def round_with_precision(value: float, precision: int) -> float:
-    """Round one value to the requested precision and normalize tiny values to zero."""
-    rounded = round(value, precision)
-    tolerance = max(10 ** (-precision), 1e-12)
-    if abs(rounded) < tolerance:
-        return 0.0
-    return rounded
-
-
-def process_airfoil_data(airfoil_file: str | Path) -> ProcessedAirfoilData:
-    """Read an airfoil coordinate file and compute LE/TE camber-line points.
-
-    Parameters
-    ----------
-    airfoil_file : str or Path
-        Path to an airfoil coordinate file readable by ``airfoils.fileio``.
-
-    Returns
-    -------
-    ProcessedAirfoilData
-        Title, normalized upper/lower coordinate arrays, and two camber-line
-        points ``(le_point, te_point)`` at the normalized leading and
-        trailing edge locations.
-    """
-    airfoil_path = Path(airfoil_file)
-    with airfoil_path.open("r", encoding="utf-8") as infile:
-        title = infile.readline().rstrip("\r\n")
-
-    x_precision, y_precision = infer_coordinate_precision(airfoil_path)
-    upper_raw, lower_raw = fileio.import_airfoil_data(str(airfoil_path))
-    airfoil = airfoils.Airfoil(upper_raw, lower_raw)
-    le_point = (
-        round_with_precision(0.0, x_precision),
-        round_with_precision(float(airfoil.camber_line(0.0)), y_precision),
-    )
-    te_point = (
-        round_with_precision(1.0, x_precision),
-        round_with_precision(float(airfoil.camber_line(1.0)), y_precision),
-    )
-    upper = (
-        tuple(float(value) for value in upper_raw[0]),
-        tuple(float(value) for value in upper_raw[1]),
-    )
-    lower = (
-        tuple(float(value) for value in lower_raw[0]),
-        tuple(float(value) for value in lower_raw[1]),
-    )
-    return ProcessedAirfoilData(
-        title=title,
-        upper=upper,
-        lower=lower,
-        x_precision=x_precision,
-        y_precision=y_precision,
-        le_point=le_point,
-        te_point=te_point,
-    )
-
-
-def export_selig_airfoil_file(
-    output_file: str | Path,
-    processed_airfoil: ProcessedAirfoilData,
-) -> None:
-    """Write processed airfoil coordinates in Selig format."""
-    upper_x, upper_y = processed_airfoil.upper
-    lower_x, lower_y = processed_airfoil.lower
-
-    if upper_x[0] < upper_x[-1]:
-        upper_points = list(zip(reversed(upper_x), reversed(upper_y)))
-    else:
-        upper_points = list(zip(upper_x, upper_y))
-
-    if lower_x[0] > lower_x[-1]:
-        lower_points = list(zip(reversed(lower_x), reversed(lower_y)))
-    else:
-        lower_points = list(zip(lower_x, lower_y))
-
-    lines = [processed_airfoil.title]
-    lines.extend(
-        f"{x:.{processed_airfoil.x_precision}f} {y:.{processed_airfoil.y_precision}f}"
-        for x, y in upper_points
-    )
-    lines.extend(
-        f"{x:.{processed_airfoil.x_precision}f} {y:.{processed_airfoil.y_precision}f}"
-        for x, y in lower_points[1:]
-    )
-    Path(output_file).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def build_template_context(
@@ -225,12 +91,19 @@ def build_template_context(
         processed_airfoil.x_precision,
         processed_airfoil.y_precision,
     )
+    te_fill_x, te_fill_y = format_point(
+        processed_airfoil.te_fill_point,
+        processed_airfoil.x_precision,
+        processed_airfoil.y_precision,
+    )
     context = {
         "airfoil_file": airfoil_filename,
         "le_x": le_x,
         "le_y": le_y,
         "te_x": te_x,
         "te_y": te_y,
+        "te_fill_x": te_fill_x,
+        "te_fill_y": te_fill_y,
     }
     if material_filename is not None:
         context["material_file"] = material_filename
@@ -238,6 +111,36 @@ def build_template_context(
     context.update(DEFAULT_TEMPLATE_PARAMS)
     if template_params:
         context.update(template_params)
+
+    # Locate the chordwise position where the airfoil thickness reaches twice
+    # the lamina thickness, scanning inward from the trailing edge. This marks
+    # where the trailing-edge fill begins on both the top and bottom surfaces.
+    te_start_x = find_thickness_location(
+        processed_airfoil.airfoil,
+        float(context["lamina_thickness"])*1.1,
+    )
+    te_start_x_str = f"{te_start_x:.{processed_airfoil.x_precision}f}"
+    context["te_start_top_x"] = te_start_x_str
+    context["te_start_bottom_x"] = te_start_x_str
+
+    # Place the trailing-edge fill point at the chordwise midpoint between
+    # te_start and the trailing edge, with its vertical coordinate on the
+    # camber line at that location.
+    te_x_value = processed_airfoil.te_point[0]
+    te_fill_x_value = te_start_x + (te_x_value - te_start_x) * 0.1
+    te_fill_point = (
+        round_with_precision(te_fill_x_value, processed_airfoil.x_precision),
+        round_with_precision(
+            float(processed_airfoil.airfoil.camber_line(te_fill_x_value)),
+            processed_airfoil.y_precision,
+        ),
+    )
+    context["te_fill_x"], context["te_fill_y"] = format_point(
+        te_fill_point,
+        processed_airfoil.x_precision,
+        processed_airfoil.y_precision,
+    )
+
     return context
 
 

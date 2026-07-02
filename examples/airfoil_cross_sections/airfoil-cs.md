@@ -7,7 +7,7 @@ authors:
   - name: Su Tian
     affiliations:
       - AnalySwift
-date: 2026-05-11
+date: 2026-07-02
 banner:
 label: "batch-cs-analysis"
 tags:
@@ -34,7 +34,7 @@ Each case generates an airfoil cross-section from a Selig-format coordinate file
 
 **Highlights**
 
-- Run cross-sectional analyses on 1400+ airfoils
+- Run cross-sectional analyses on 1600+ airfoils
 - Start from standard Selig-format airfoil coordinate files
 - Reuse one PreVABS template across different materials and layup angles
 - Extract sectional properties from VABS output using APIs of sgio
@@ -78,12 +78,6 @@ All materials are defined in [`materials.xml`](data/materials.xml).
   - 
   - 0.33
   -
-* - Glass/epoxy UD lamina
-  - 1993
-  - 38.61
-  - 8.274
-  - 0.26
-  - 4.137
 * - Carbon/epoxy UD lamina
   - 1578
   - 140.0
@@ -100,9 +94,9 @@ All materials are defined in [`materials.xml`](data/materials.xml).
 
 #### Standalone executables
 
-- [VABS 4.1](https://analyswift.com/products/vabs-cross-sectional-analysis-tool/)
+- [VABS](https://analyswift.com/products/vabs-cross-sectional-analysis-tool/)
 - [PreVABS](https://wenbinyugroup.github.io/prevabs/)
-  - [Download](https://github.com/wenbinyugroup/prevabs/releases/tag/v2.1.0-preview.20260508.3)
+  - [Download](https://github.com/wenbinyugroup/prevabs/releases/)
 
 #### Python dependencies
 
@@ -129,20 +123,18 @@ uv sync --extra notebook --extra plotting
 cd examples/airfoil_cross_sections
 
 # Run one batch configuration
-uv run python run.py config_skin_al_001.json
+uv run python run.py config_skin_al_0001.json
 
 # Results are written to results_skin_al_001.csv
 # Per-case files are written under evals_skin_al_001/
 ```
 
-Run all five configurations sequentially:
+Run all three configurations sequentially:
 
 ```bash
-uv run python run.py config_skin_al_001.json
-uv run python run.py config_skin_gfrp_001.json
-uv run python run.py config_skin_cfrp_001.json
-uv run python run.py config_skin_cfrp_001_45.json
-uv run python run.py config_skin_cfrp_001_90.json
+uv run python run.py config_skin_al_0001.json
+uv run python run.py config_skin_cfrp_0001.json
+uv run python run.py config_skin_cfrp_0001_45.json
 ```
 
 
@@ -272,10 +264,18 @@ The batch script [`run.py`](run.py) simply calls this post-processing function a
 
 ## Results
 
-Each batch run produces a CSV (e.g. `results_skin_al_001.csv`) with one row per airfoil. The notebook [`plot.ipynb`](plot.ipynb) loads all result CSVs, filters out failed cases, and renders an interactive scatter plot. Dropdown menus select which beam property is shown on the x and y axes, and legend entries toggle individual datasets on or off.
+Each batch run produces a CSV (e.g. `results_skin_al_0001.csv`) with one row per airfoil. The notebook [`plot.ipynb`](plot.ipynb) loads all result CSVs, filters out failed cases, and renders an interactive scatter plot. Dropdown menus select which beam property is shown on the x and y axes, and legend entries toggle individual datasets on or off.
 
-![](#fig-airfoil-cs-plot)
+```{iframe} localhost:3100/plot.interactive.html
+```
 
+[Open plot in a new tab](./plot.interactive.html)
+
+Beam properties for different airfoils and materials. The user can select which properties to plot on the x and y axes using the dropdown menus, choose an airfoil name to highlight across datasets, and toggle datasets on or off by clicking legend entries.
+
+Beam model refs:
+
+- https://wenbinyugroup.github.io/sgio/guide/model/bm_timoshenko.html
 
 ---
 
@@ -283,7 +283,7 @@ Each batch run produces a CSV (e.g. `results_skin_al_001.csv`) with one row per 
 
 ### Configuration
 
-`run.py` supports loading a JSON config file such as `config_skin_al_001.json`.
+`run.py` supports loading a JSON config file such as `config_skin_al_0001.json`.
 Relative paths inside the config file are resolved relative to the config file location.
 
 ```json
@@ -292,7 +292,7 @@ Relative paths inside the config file are resolved relative to the config file l
   "airfoil_dir": "coord_seligFmt",
 
   // Root output directory for per-airfoil case folders and logs.
-  "working_dir": "evals_skin_al_001",
+  "working_dir": "evals_skin_al_0001",
 
   // Optional explicit subset of airfoil files to run.
   // Use null to run all files under airfoil_dir.
@@ -328,7 +328,7 @@ Relative paths inside the config file are resolved relative to the config file l
 
   // Output CSV path. When running from a config file, a relative path is
   // resolved next to the config file rather than under working_dir.
-  "output_csv": "results_skin_al_001.csv",
+  "output_csv": "results_skin_al_0001.csv",
 
   // Optional material database copied into each case directory.
   "material_file": "data/materials.xml",
@@ -345,7 +345,7 @@ Relative paths inside the config file are resolved relative to the config file l
     "translate_y": 0.0,
     "scale": 1.0,
     "material_name": "al_alloy",
-    "lamina_thickness": 0.01,
+    "lamina_thickness": 0.001,
     "fiber_angle": 0.0
   }
 }
@@ -366,6 +366,6 @@ Relative paths inside the config file are resolved relative to the config file l
 
 - [`materials.xml`](materials.xml): Material database
 - [`airfoil_skin_only.template.xml`](airfoil_skin_only.template.xml): PreVABS XML template
-- [`config_skin_al_001.json`](config_skin_al_001.json): Aluminum case
-- [`config_skin_cfrp_001.json`](config_skin_cfrp_001.json): CFRP 0 deg case
-- [`config_skin_cfrp_001_45.json`](config_skin_cfrp_001_45.json): CFRP 45 deg case
+- [`config_skin_al_0001.json`](config_skin_al_0001.json): Aluminum case
+- [`config_skin_cfrp_0001.json`](config_skin_cfrp_0001.json): CFRP 0 deg case
+- [`config_skin_cfrp_0001_45.json`](config_skin_cfrp_0001_45.json): CFRP 45 deg case

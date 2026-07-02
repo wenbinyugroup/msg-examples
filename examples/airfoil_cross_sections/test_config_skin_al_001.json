@@ -1,10 +1,28 @@
 {
   "airfoil_dir": "coord_seligFmt",
-  "working_dir": "evals_skin_cfrp_001",
-  "airfoil_files": null,
+  "working_dir": "test_evals_skin_al_001",
+  "output_csv": "test_results_skin_al_001.csv",
+  "airfoil_files": [
+    "a63a108c.dat",
+    "ah93w480b.dat",
+    "ah95160.dat",
+    "ames02.dat",
+    "bte-fk.dat",
+    "cast102.dat",
+    "dsma523b.dat",
+    "hs1430.dat",
+    "hs1620.dat",
+    "hs1712.dat",
+    "mi-strut1.dat",
+    "r1145msf.dat",
+    "r1145msm.dat",
+    "rae5215.dat",
+    "s9104.dat",
+    "s9104BTE.dat"
+  ],
   "sample_size": null,
   "seed": 0,
-  "jobs": 10,
+  "jobs": 1,
   "solver_timeout": 10,
   "failed_case": "continue",
   "properties": [
@@ -17,7 +35,6 @@
     "cmp56r",
     "tc2", "tc3", "sc2", "sc3"
   ],
-  "output_csv": "results_skin_cfrp_001.csv",
   "material_file": "data/materials.xml",
   "template_file": "data/airfoil_skin_only.template.xml",
   "template_params": {
@@ -27,8 +44,8 @@
     "translate_x": -0.25,
     "translate_y": 0.0,
     "scale": 1.0,
-    "material_name": "carbon_epoxy_ud",
-    "lamina_thickness": 0.01,
+    "material_name": "al_alloy",
+    "lamina_thickness": 0.001,
     "fiber_angle": 0.0
   }
 }

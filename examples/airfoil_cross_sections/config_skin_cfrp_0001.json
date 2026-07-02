@@ -1,6 +1,7 @@
 {
   "airfoil_dir": "coord_seligFmt",
-  "working_dir": "evals_skin_al_001",
+  "working_dir": "evals_skin_cfrp_0001",
+  "output_csv": "results_skin_cfrp_0001.csv",
   "airfoil_files": null,
   "sample_size": null,
   "seed": 0,
@@ -17,7 +18,6 @@
     "cmp56r",
     "tc2", "tc3", "sc2", "sc3"
   ],
-  "output_csv": "results_skin_al_001.csv",
   "material_file": "data/materials.xml",
   "template_file": "data/airfoil_skin_only.template.xml",
   "template_params": {
@@ -27,8 +27,8 @@
     "translate_x": -0.25,
     "translate_y": 0.0,
     "scale": 1.0,
-    "material_name": "al_alloy",
-    "lamina_thickness": 0.01,
+    "material_name": "carbon_epoxy_ud",
+    "lamina_thickness": 0.001,
     "fiber_angle": 0.0
   }
 }
