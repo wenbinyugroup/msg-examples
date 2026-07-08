@@ -11,6 +11,11 @@
   "properties": [
     "mu",
     "ea", "gj", "ga22", "ga33", "ei22", "ei33",
+    "stf12r", "stf13r", "stf14r", "stf15r", "stf16r",
+    "stf23r", "stf24r", "stf25r", "stf26r",
+    "stf34r", "stf35r", "stf36r",
+    "stf45r", "stf46r",
+    "stf56r",
     "cmp12r", "cmp13r", "cmp14r", "cmp15r", "cmp16r",
     "cmp23r", "cmp24r", "cmp25r", "cmp26r",
     "cmp34r", "cmp35r", "cmp36r",

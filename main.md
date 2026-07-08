@@ -1,6 +1,5 @@
-# MSG Examples
+# Multiscale Structural Mechanics
 
-Welcome to the **Mechanics of Structure Genome (MSG) Examples**!
 This collection demonstrates the use of VABS and SwiftComp for structural analysis of composite materials and structures.
 
 <!-- [Examples](./examples/index.md) -->

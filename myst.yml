@@ -3,7 +3,7 @@
 version: 1
 project:
   id: 1db56dac-3bad-4960-99b1-b0359dbf42c4
-  title: MSG Examples
+  title: Multiscale Structural Mechanics
   description: Examples demonstrating the use of VABS/SwiftComp for structural analysis using the Mechanics of Structure Genome (MSG) approach
   keywords:
     - VABS
@@ -49,12 +49,12 @@ project:
 
 site:
   template: book-theme
-  title: MSG Examples
+  title: Multiscale Structural Mechanics
   options:
-    logo_text: MSG Examples
+    logo_text: Multiscale Structural Mechanics
     # Uncomment and add if you have these assets:
     # favicon: favicon.ico
-    # logo: images/site_logo.png
+    logo: images/msm_logo.png
   # nav:
   #   - title: Home
   #     url: /

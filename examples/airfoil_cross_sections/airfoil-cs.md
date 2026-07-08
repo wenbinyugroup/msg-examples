@@ -7,7 +7,7 @@ authors:
   - name: Su Tian
     affiliations:
       - AnalySwift
-date: 2026-07-02
+date: 2026-07-08
 banner:
 label: "batch-cs-analysis"
 tags:
@@ -86,6 +86,24 @@ All materials are defined in [`materials.xml`](data/materials.xml).
   - 4.137
 ```
 
+
+---
+
+## Results
+
+Each batch run produces a CSV (e.g. `results_skin_al_0001.csv`) with one row per airfoil. The notebook [`plot.ipynb`](plot.ipynb) loads all result CSVs, filters out failed cases, and renders an interactive scatter plot. Dropdown menus select which beam property is shown on the x and y axes, and legend entries toggle individual datasets on or off.
+
+
+[Open the interactive plot in a new tab](./_static/plot.interactive.html)
+
+Beam properties for different airfoils and materials. The user can select which properties to plot on the x and y axes using the dropdown menus, choose an airfoil name to highlight across datasets, and toggle datasets on or off by clicking legend entries.
+
+Beam model refs:
+
+- https://www.sciencedirect.com/science/article/pii/S0263822324008183
+- https://wenbinyugroup.github.io/sgio/guide/model/bm_timoshenko.html
+
+
 ---
 
 ## Run This Example
@@ -95,8 +113,7 @@ All materials are defined in [`materials.xml`](data/materials.xml).
 #### Standalone executables
 
 - [VABS](https://analyswift.com/products/vabs-cross-sectional-analysis-tool/)
-- [PreVABS](https://wenbinyugroup.github.io/prevabs/)
-  - [Download](https://github.com/wenbinyugroup/prevabs/releases/)
+- [PreVABS](https://github.com/wenbinyugroup/prevabs/releases/)
 
 #### Python dependencies
 
@@ -125,8 +142,8 @@ cd examples/airfoil_cross_sections
 # Run one batch configuration
 uv run python run.py config_skin_al_0001.json
 
-# Results are written to results_skin_al_001.csv
-# Per-case files are written under evals_skin_al_001/
+# Results are written to results_skin_al_0001.csv
+# Per-case files are written under evals_skin_al_0001/
 ```
 
 Run all three configurations sequentially:
@@ -220,6 +237,8 @@ The shared PreVABS template is intentionally generic. The airfoil-specific data 
 <layer lamina="ply">{fiber_angle}</layer>
 ```
 
+See [PreVABS documentation](https://wenbinyugroup.github.io/prevabs/) to build your own templates.
+
 In other words, the front end of the workflow is mostly template binding: a standard airfoil file provides the boundary coordinates, the script derives the LE/TE reference points required by PreVABS, and the template contributes the fixed modeling choices.
 
 ### 2. Post-Processing: VABS Output -> Section Properties
@@ -259,23 +278,6 @@ def extract_properties(model, property_names):
 This separation is useful in practice: once the expensive solver run has completed, you can re-extract a different set of section properties from the same `.sg.k` file without regenerating the mesh or rerunning PreVABS/VABS.
 
 The batch script [`run.py`](run.py) simply calls this post-processing function after each successful case and appends the resulting dictionary as one row in the output CSV.
-
----
-
-## Results
-
-Each batch run produces a CSV (e.g. `results_skin_al_0001.csv`) with one row per airfoil. The notebook [`plot.ipynb`](plot.ipynb) loads all result CSVs, filters out failed cases, and renders an interactive scatter plot. Dropdown menus select which beam property is shown on the x and y axes, and legend entries toggle individual datasets on or off.
-
-```{iframe} localhost:3100/plot.interactive.html
-```
-
-[Open plot in a new tab](./plot.interactive.html)
-
-Beam properties for different airfoils and materials. The user can select which properties to plot on the x and y axes using the dropdown menus, choose an airfoil name to highlight across datasets, and toggle datasets on or off by clicking legend entries.
-
-Beam model refs:
-
-- https://wenbinyugroup.github.io/sgio/guide/model/bm_timoshenko.html
 
 ---
 
