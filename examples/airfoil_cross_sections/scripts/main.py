@@ -17,7 +17,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from helpers import (
+from .helpers import (
     close_case_logger,
     create_case_logger,
     ensure_root_logging,
@@ -25,7 +25,7 @@ from helpers import (
     run_solver_command,
     write_case_error_file,
 )
-from pre_process import (
+from .pre_process import (
     ProcessedAirfoilData,
     export_selig_airfoil_file,
     find_thickness_location,

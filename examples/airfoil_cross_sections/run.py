@@ -17,9 +17,9 @@ import random
 from pathlib import Path
 from typing import Any
 
-from helpers import configure_logging, resolve_path, write_case_error_file
-from main import run_airfoil_case
-from post_process import post_process_vabs_output
+from scripts.helpers import configure_logging, resolve_path, write_case_error_file
+from scripts.main import run_airfoil_case
+from scripts.post_process import post_process_vabs_output
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent

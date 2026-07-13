@@ -1,7 +1,7 @@
 {
   "airfoil_dir": "coord_seligFmt",
-  "working_dir": "evals_skin_cfrp_0001_45",
-  "output_csv": "results_skin_cfrp_0001_45.csv",
+  "working_dir": "skin_cfrp_0001_45/evals",
+  "output_csv": "skin_cfrp_0001_45/results.csv",
   "airfoil_files": null,
   "sample_size": null,
   "seed": 0,

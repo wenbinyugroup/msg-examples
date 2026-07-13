@@ -13,7 +13,7 @@ from typing import Any
 
 import sgio
 
-from helpers import ensure_root_logging, resolve_path
+from .helpers import ensure_root_logging, resolve_path
 
 
 def read_vabs_output(vabs_output_path: str | Path) -> Any:

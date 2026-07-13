@@ -7,7 +7,7 @@ authors:
   - name: Su Tian
     affiliations:
       - AnalySwift
-date: 2026-07-08
+date: 2026-07-13
 banner:
 label: "batch-cs-analysis"
 tags:
@@ -50,7 +50,7 @@ Each cross-section is an airfoil contour with a single skin layup of fixed thick
 The fiber angle of the skin lamina is set per configuration.
 The leading- and trailing-edge points used by PreVABS are derived from the camber line of the input coordinates.
 
-![](mh104_skin_only.png)
+![](images/mh104_skin_only.png)
 
 ### Material Properties
 
@@ -91,12 +91,14 @@ All materials are defined in [`materials.xml`](data/materials.xml).
 
 ## Results
 
-Each batch run produces a CSV (e.g. `results_skin_al_0001.csv`) with one row per airfoil. The notebook [`plot.ipynb`](plot.ipynb) loads all result CSVs, filters out failed cases, and renders an interactive scatter plot. Dropdown menus select which beam property is shown on the x and y axes, and legend entries toggle individual datasets on or off.
+Each batch run produces a CSV (e.g. `skin_al_0001/results.csv`) with one row per airfoil. The notebook [`plot.ipynb`](plot.ipynb) loads all result CSVs and renders an interactive scatter plot. Dropdown menus select which beam property is shown on the x and y axes and which airfoil to be highlighted, and legend entries toggle individual datasets on or off.
 
 
 [Open the interactive plot in a new tab](./_static/plot.interactive.html)
 
-Beam properties for different airfoils and materials. The user can select which properties to plot on the x and y axes using the dropdown menus, choose an airfoil name to highlight across datasets, and toggle datasets on or off by clicking legend entries.
+Beam properties for different airfoils and materials.
+
+The user can select which properties to plot on the x and y axes using the dropdown menus, choose an airfoil name to highlight across datasets, and toggle datasets on or off by clicking legend entries.
 
 Beam model refs:
 
@@ -106,16 +108,18 @@ Beam model refs:
 
 ---
 
-## Run This Example
+## Technical Details
 
-### Prerequisites
+:::{dropdown} Run This Example
 
-#### Standalone executables
+**Prerequisites**
+
+Standalone executables
 
 - [VABS](https://analyswift.com/products/vabs-cross-sectional-analysis-tool/)
 - [PreVABS](https://github.com/wenbinyugroup/prevabs/releases/)
 
-#### Python dependencies
+Python dependencies
 
 - [airfoils](https://github.com/airinnova/airfoils)
 - [sgio](https://wenbinyugroup.github.io/sgio/)
@@ -125,39 +129,25 @@ Install dependencies:
 ```bash
 # Install only this example's dependencies
 cd examples/airfoil_cross_sections
-uv sync
-```
-
-If you want the notebook visualization dependencies as well:
-
-```bash
 uv sync --extra notebook --extra plotting
 ```
 
-### Run configurations
+**Run configurations**
 
 ```bash
-cd examples/airfoil_cross_sections
-
 # Run one batch configuration
 uv run python run.py config_skin_al_0001.json
+# Results are written to skin_al_0001/results.csv
+# Per-case files are written under skin_al_0001/evals/
 
-# Results are written to results_skin_al_0001.csv
-# Per-case files are written under evals_skin_al_0001/
-```
-
-Run all three configurations sequentially:
-
-```bash
-uv run python run.py config_skin_al_0001.json
 uv run python run.py config_skin_cfrp_0001.json
 uv run python run.py config_skin_cfrp_0001_45.json
 ```
 
+:::
 
----
 
-## Analysis Workflow Scripting
+:::{dropdown} Analysis Workflow Scripting
 
 The scripting is organized around two practical tasks:
 
@@ -166,9 +156,9 @@ The scripting is organized around two practical tasks:
 
 The batch driver in [`run.py`](run.py) mainly orchestrates these two steps repeatedly across many airfoils.
 
-### 1. Pre-Processing: Airfoil Coordinates -> VABS Input
+**1. Pre-Processing: Airfoil Coordinates -> VABS Input**
 
-The per-case workflow in [`main.py`](main.py) starts from a standard Selig-format airfoil file and a reusable PreVABS XML template, [`airfoil_skin_only.template.xml`](data/airfoil_skin_only.template.xml).
+The per-case workflow in [`main.py`](scripts/main.py) starts from a standard Selig-format airfoil file and a reusable PreVABS XML template, [`airfoil_skin_only.template.xml`](data/airfoil_skin_only.template.xml).
 
 For each case, the script:
 
@@ -241,22 +231,19 @@ See [PreVABS documentation](https://wenbinyugroup.github.io/prevabs/) to build y
 
 In other words, the front end of the workflow is mostly template binding: a standard airfoil file provides the boundary coordinates, the script derives the LE/TE reference points required by PreVABS, and the template contributes the fixed modeling choices.
 
-### 2. Post-Processing: VABS Output -> Section Properties
 
-Once `vabs` finishes, each case has an output file such as `airfoil_cs.sg.k`. The post-processing step in [`post_process.py`](post_process.py) is deliberately small: it parses that file with [`sgio`](https://github.com/wenbinyugroup/sgio) and asks for a predefined list of property names such as `mu`, `ea`, `gj`, `ei22`, and `ei33`.
+**2. Post-Processing: VABS Output -> Section Properties**
+
+Once `vabs` finishes, each case has an output file such as `airfoil_cs.sg.k`. The post-processing step in [`post_process.py`](scripts/post_process.py) is deliberately small: it parses that file with [`sgio`](https://github.com/wenbinyugroup/sgio) and asks for a predefined list of property names such as `mu`, `ea`, `gj`, `ei22`, and `ei33`.
 
 The core read step is:
 
 ```python
-def read_vabs_output(vabs_output_path):
-    model = sgio.read_output_model(
-        str(vabs_output_path),
-        file_format="vabs",
-        model_type="BM2",
-    )
-    if model is None:
-        raise RuntimeError(f"Failed to read VABS output: {vabs_output_path}")
-    return model
+model = sgio.read_output_model(
+    str(vabs_output_path),
+    file_format="vabs",
+    model_type="BM2",
+)
 ```
 
 Property extraction is then just a thin wrapper around `model.get(...)`:
@@ -267,10 +254,7 @@ def extract_properties(model, property_names):
     extracted = {}
 
     for property_name in property_names:
-        value = model.get(property_name)
-        if value is None and property_name.lower() not in available_names:
-            raise KeyError(f"Property '{property_name}' not found")
-        extracted[property_name] = value
+        extracted[property_name] = model.get(property_name)
 
     return extracted
 ```
@@ -279,11 +263,12 @@ This separation is useful in practice: once the expensive solver run has complet
 
 The batch script [`run.py`](run.py) simply calls this post-processing function after each successful case and appends the resulting dictionary as one row in the output CSV.
 
----
+:::
 
-## Reference
 
-### Configuration
+:::{dropdown} Reference
+
+**Configuration**
 
 `run.py` supports loading a JSON config file such as `config_skin_al_0001.json`.
 Relative paths inside the config file are resolved relative to the config file location.
@@ -294,7 +279,7 @@ Relative paths inside the config file are resolved relative to the config file l
   "airfoil_dir": "coord_seligFmt",
 
   // Root output directory for per-airfoil case folders and logs.
-  "working_dir": "evals_skin_al_0001",
+  "working_dir": "skin_al_0001/evals",
 
   // Optional explicit subset of airfoil files to run.
   // Use null to run all files under airfoil_dir.
@@ -330,7 +315,7 @@ Relative paths inside the config file are resolved relative to the config file l
 
   // Output CSV path. When running from a config file, a relative path is
   // resolved next to the config file rather than under working_dir.
-  "output_csv": "results_skin_al_0001.csv",
+  "output_csv": "skin_al_0001/results.csv",
 
   // Optional material database copied into each case directory.
   "material_file": "data/materials.xml",
@@ -354,20 +339,23 @@ Relative paths inside the config file are resolved relative to the config file l
 ```
 
 
-### Files
+**Files**
 
-#### Scripts
+Scripts
 
 - [`run.py`](run.py): Batch driver (CLI + JSON config)
-- [`main.py`](main.py): Single-case workflow
-- [`post_process.py`](post_process.py): VABS output parsing
-- [`helpers.py`](helpers.py): Path, logging, and solver utilities
+- [`main.py`](scripts/main.py): Single-case workflow
+- [`pre_process.py`](scripts/pre_process.py): VABS input generating
+- [`post_process.py`](scripts/post_process.py): VABS output parsing
+- [`helpers.py`](scripts/helpers.py): Path, logging, and solver utilities
 - [`plot.ipynb`](plot.ipynb): Result visualization
 
-#### Data
+Data
 
-- [`materials.xml`](materials.xml): Material database
-- [`airfoil_skin_only.template.xml`](airfoil_skin_only.template.xml): PreVABS XML template
+- [`materials.xml`](data/materials.xml): Material database
+- [`airfoil_skin_only.template.xml`](data/airfoil_skin_only.template.xml): PreVABS XML template
 - [`config_skin_al_0001.json`](config_skin_al_0001.json): Aluminum case
 - [`config_skin_cfrp_0001.json`](config_skin_cfrp_0001.json): CFRP 0 deg case
 - [`config_skin_cfrp_0001_45.json`](config_skin_cfrp_0001_45.json): CFRP 45 deg case
+
+:::

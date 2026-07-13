@@ -16,7 +16,7 @@ This collection demonstrates the use of VABS and SwiftComp for structural analys
 :::{card} Batch Cross-sectional Analyses
 :link: ./examples/airfoil_cross_sections/airfoil-cs.md
 
-![](./examples/airfoil_cross_sections/mh104_skin_only.png)
+![](./examples/airfoil_cross_sections/images/mh104_skin_only.png)
 
 :::
 
