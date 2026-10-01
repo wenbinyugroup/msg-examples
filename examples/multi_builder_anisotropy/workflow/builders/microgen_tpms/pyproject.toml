@@ -1,0 +1,12 @@
+[project]
+name = "builder-microgen-tpms"
+version = "0.1.0"
+description = "Schwarz-P TPMS sheet builder (microgen)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "microgen==1.3.2",
+    "cadquery>=2.5,<2.6",
+    "gmsh>=4.13.1,<5",
+    "pyvista>=0.44.2,<0.45",
+    "numpy>1.24,<3",
+]

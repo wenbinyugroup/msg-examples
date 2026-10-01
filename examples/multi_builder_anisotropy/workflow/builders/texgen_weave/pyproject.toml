@@ -1,0 +1,6 @@
+[project]
+name = "builder-texgen-weave"
+version = "0.1.0"
+description = "2x2 plain weave builder (TexGen voxel mesh; uses the installed TexGen bindings)"
+requires-python = ">=3.9,<3.10"
+dependencies = []

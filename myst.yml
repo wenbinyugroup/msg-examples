@@ -29,6 +29,10 @@ project:
       children:
         - file: examples/airfoil_cross_sections/plot.ipynb
           hidden: true
+    - file: examples/multi_builder_anisotropy/multi_builder_anisotropy.md
+      children:
+        - file: examples/multi_builder_anisotropy/visualization.ipynb
+          hidden: true
     # - file: doc/EXAMPLE_GUIDELINES.md
 
   # Files and directories to exclude from the build

@@ -1,0 +1,10 @@
+[project]
+name = "builder-gmshmodel-udfrp"
+version = "0.1.0"
+description = "UD FRP cross-section builder (gmshModel RandomInclusionRVE)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "gmsh>=4.13.1,<5",
+    "gmshmodel==1.1.1",
+    "numpy<2",
+]

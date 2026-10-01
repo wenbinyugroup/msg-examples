@@ -1,0 +1,86 @@
+[
+  {
+    "name": "aluminum_5052_h32",
+    "model": "sd1",
+    "isotropy": 0,
+    "density": 2680.0,
+    "elastic": {
+      "e1": 70300000000.0,
+      "nu12": 0.33
+    }
+  },
+  {
+    "name": "epoxy_resin_sikabiresin_cr132",
+    "model": "sd1",
+    "isotropy": 0,
+    "density": 1150.0,
+    "elastic": {
+      "e1": 2700000000.0,
+      "nu12": 0.35
+    }
+  },
+  {
+    "name": "e_glass_fibre_nittobo",
+    "model": "sd1",
+    "isotropy": 0,
+    "density": 2600.0,
+    "elastic": {
+      "e1": 75000000000.0,
+      "nu12": 0.22
+    }
+  },
+  {
+    "name": "t300_carbon_fibre",
+    "model": "sd1",
+    "isotropy": 1,
+    "density": 1760.0,
+    "elastic": {
+      "e1": 230000000000.0,
+      "e2": 15000000000.0,
+      "e3": 15000000000.0,
+      "g12": 15000000000.0,
+      "g13": 15000000000.0,
+      "g23": 7000000000.0,
+      "nu12": 0.2,
+      "nu13": 0.2,
+      "nu23": 0.07
+    }
+  },
+  {
+    "name": "as4_8773_lamina",
+    "model": "sd1",
+    "isotropy": 1,
+    "density": 1588.0,
+    "elastic": {
+      "e1": 119800000000.0,
+      "e2": 9080000000.0,
+      "e3": 9080000000.0,
+      "g12": 5290000000.0,
+      "g13": 5290000000.0,
+      "g23": 3492307692.307692,
+      "nu12": 0.32,
+      "nu13": 0.32,
+      "nu23": 0.3
+    }
+  },
+  {
+    "name": "peek_victrex_450g",
+    "model": "sd1",
+    "isotropy": 0,
+    "density": 1300.0,
+    "elastic": {
+      "e1": 4000000000.0,
+      "nu12": 0.4
+    }
+  },
+  {
+    "name": "ti6al4v_am",
+    "model": "sd1",
+    "isotropy": 0,
+    "density": 4430.0,
+    "elastic": {
+      "e1": 110000000000.0,
+      "nu12": 0.34
+    }
+  }
+]

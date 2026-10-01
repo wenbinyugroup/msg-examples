@@ -1,0 +1,11 @@
+[project]
+name = "multi-builder-anisotropy"
+version = "0.1.0"
+description = "Microstructures from several modeling tools, homogenized with SwiftComp via sgio, compared by an energy-ratio anisotropy measure"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.2.6",
+    "pillow>=12.3.0",
+    "scipy>=1.15.3",
+    "sgio[pyvista-html]>=0.13.0",
+]
