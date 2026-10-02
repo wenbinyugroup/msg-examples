@@ -7,16 +7,20 @@ authors:
   - name: Su Tian
     affiliations:
       - AnalySwift
-date: 2026-10-01
+date: 2026-10-02
 label: "multi-builder-anisotropy"
 tags:
   - sgio
   - swiftcomp
+  - sg
+  - msg
   - 2d_sg
   - 3d_sg
   - anisotropy
 keywords:
   - SwiftComp
+  - Structure Gene
+  - Mechanics of Structure Genome
   - sgio
   - Homogenization
   - Elastic Anisotropy
@@ -30,17 +34,17 @@ keywords:
 
 ## Overview
 
-Every microstructure community has its favorite modeling tool: Abaqus/CAE for cellular
-solids, Gmsh-based generators for fibre composites, implicit-geometry libraries for lattices,
-TexGen for textiles. Their outputs differ in format, element types and the way material
-orientations are stored. This example takes one microstructure from each of four tools and
-runs all of them through one pipeline built on two core tools:
+Microstructures can be built by different tools:
+Dedicated tools like TexGen or microgen, or general ones like Gmsh or Abaqus/CAE
+(see [](#links) for all tools).
+Their outputs differ in format, element types and the way material
+orientations are stored.
+This example takes one microstructure from each of four tools and runs all of them through one pipeline built on two core tools:
 
-- **[SwiftComp](https://analyswift.com/swiftcomp-vamuch-micromechanics-modeling-of-heterogeneous-materials-2/)**
-  homogenizes a heterogeneous material: from a finite-element model of its Structure Gene (SG),
+- **SwiftComp** homogenizes a heterogeneous material: from a finite-element model of its Structure Gene (SG),
   the smallest building block of the microstructure (here a 2D cross-section or a 3D unit cell),
   it computes the effective properties.
-- **[sgio](https://wenbinyugroup.github.io/sgio/)** connects SwiftComp to the rest of the
+- **sgio** connects SwiftComp to the rest of the
   toolchain: it converts each modeling tool's output into a SwiftComp SG input, runs SwiftComp,
   and reads the results back into Python.
 
@@ -50,10 +54,10 @@ The pipeline has three stages:
 flowchart TD
   subgraph pre["Preprocess: modeling"]
     direction TB
-    B1["Abaqus/CAE: honeycomb"] --> F1[".inp"]
-    B2["GmshModel: UD composite"] --> F2[".msh + .sg.json"]
-    B3["microgen: TPMS"] --> F3[".msh + .sg.json"]
-    B4["TexGen: plain weave"] --> F4[".inp + .ori"]
+    B1["Abaqus/CAE"] --> F1[".inp"]
+    B2["Gmsh"] --> F2[".msh + .sg.json"]
+    B3["microgen"] --> F3[".msh + .sg.json"]
+    B4["TexGen"] --> F4[".inp + .ori"]
   end
   subgraph homo["Homogenization"]
     direction TB
@@ -77,25 +81,9 @@ flowchart TD
   RD --> A
 ```
 
-The modeling tools differ, but after sgio the pipeline is identical: only the input format and
-the SG dimension change from one model to the next. The effective stiffness of each model is
-then compared using the energy-ratio-based measure of elastic anisotropy
-([Fang et al., 2019](https://doi.org/10.1103/PhysRevLett.122.045502)), which puts a honeycomb,
-a fibre composite, a TPMS lattice and a woven fabric on one scale.
+The modeling tools differ, but after sgio the pipeline is identical: only the input format and the SG dimension change from one model to the next.
+The effective stiffness of each model is then compared using a measure of elastic anisotropy, which puts a honeycomb, a fibre composite, a TPMS lattice and a woven fabric on one scale.
 
-:::{note}
-**What runs where.** Building the models needs Abaqus, TexGen and three incompatible Python
-environments; homogenization needs SwiftComp. Those steps were run once, and their outputs are
-included here: the effective stiffness of every case (`results/<builder>/*.sg.k`, collected in
-`results/summary.csv`) and the model images (`images/`). The SwiftComp input files are too large
-to include; the scripts that ran these steps are in `workflow/`. With only this example's `pyproject.toml` you can redo the postprocessing and every
-figure:
-
-```bash
-uv sync --extra plotting --extra notebook
-uv run python run.py          # recompute the anisotropy measure for every case and check it
-```
-:::
 
 ## Preprocess: four builders
 
@@ -107,7 +95,7 @@ Young's modulus surfaces.
 |---|---|---|---|---|---|
 | Hexagonal honeycomb | Abaqus/CAE | 2D | wall thickness $t/l$: 0.05, **0.10**, 0.15, 0.20 | aluminium 5052 | AS4/8773 lamina walls, fibres along the wall |
 | UD fibre composite, random fibres | Gmsh (GmshModel) | 2D | fibre count 4, 8, 12, **16** ($V_f$ 0.13 to 0.50) | E-glass / epoxy | T300 carbon / epoxy |
-| Schwarz-P TPMS sheet | microgen | 3D | level-set offset **0.5**, 0.8, 1.1, 1.4 (solid fraction 0.14 to 0.40) | PEEK | Ti-6Al-4V (additively manufactured) |
+| Schwarz-P TPMS sheet | microgen | 3D | level-set offset **0.5**, 0.8, 1.1, 1.4 (solid fraction 0.14 to 0.40) | PEEK | Ti-6Al-4V |
 | 2×2 plain weave | TexGen | 3D | yarn spacing 0.85, **1.0**, 1.2, 1.4 | E-glass yarns / epoxy | AS4/8773 yarns / epoxy |
 
 :::{figure} ./images/sg_models.png
@@ -156,20 +144,11 @@ sgio.convert(source, sg_file, file_format, "sc", file_version_out="2.1",
 sgio.run("swiftcomp", sg_file, "h", smdim=3)                    # writes <sg_file>.k
 ```
 
-All results and figures use the SG axes, labelled $x$, $y$, $z$ (SwiftComp's $y_1$, $y_2$,
-$y_3$). For the 3D SGs these are the mesh axes. A 2D SG lies in the $y$–$z$ plane:
-`model_space="xy"` maps the mesh's $x$ and $y$ onto the SG's $y$ and $z$, and $x$ is the fibre
-axis of the UD composite and the prism axis of the honeycomb. The effective stiffness
-$\mathbf{C}$ is a full 3D
-Cauchy-continuum stiffness (`SD1`) in both cases, so 2D and 3D microstructures are compared on
-the same footing.
+All results and figures use the SG axes, labelled $x$, $y$, $z$ (SwiftComp's $y_1$, $y_2$, $y_3$).
+For the 3D SGs these are the mesh axes.
+A 2D SG lies in the $y$–$z$ plane: `model_space="xy"` maps the mesh's $x$ and $y$ onto the SG's $y$ and $z$, and $x$ is the fibre axis of the UD composite and the prism axis of the honeycomb.
+The effective stiffness $\mathbf{C}$ is a full 3D Cauchy-continuum stiffness (`SD1`) in both cases, so 2D and 3D microstructures are compared on the same footing.
 
-:::{tip}
-Material orientations are where converters usually break. Read the written `.sg` back and draw
-its element frames (local $x'$, $y'$, $z'$ in red, green, blue) with
-`sgio.plot_sg_pyvista(sg, show_local_axes=True)`. Check that the frames follow the honeycomb
-walls and the weave yarns before trusting the effective properties.
-:::
 
 ## Postprocess
 
@@ -186,34 +165,27 @@ C = np.asarray(model.stff)   # 6x6 effective stiffness, Voigt order (11, 22, 33,
 rho = model.density          # effective density
 ```
 
-$\mathbf{C}$ is the effective stiffness in the SG axes $(x, y, z)$. $\rho$ is the volume
-average of the constituent densities over the SG, voids included. Both are collected for every
-case in `results/summary.csv`.
+$\mathbf{C}$ is the effective stiffness in the SG axes $(x, y, z)$.
+$\rho$ is the effective densities.
+Both are collected for every case in `results/summary.csv`.
 
 ### Directional Young's modulus
 
-The Young's modulus along a unit direction $\mathbf{n}$ follows from the compliance
-$\mathbf{S} = \mathbf{C}^{-1}$, written as a fourth-order tensor:
+The Young's modulus along a unit direction $\mathbf{n}$ follows from the compliance $\mathbf{S} = \mathbf{C}^{-1}$, written as a fourth-order tensor:
 
 $$
 \frac{1}{E(\mathbf{n})} = n_i n_j n_k n_l \, S_{ijkl}
 $$ (eq:directional-young)
 
-Converting the Voigt compliance to $S_{ijkl}$ divides the shear entries by 2 (one shear index)
-or 4 (two shear indices). Evaluating $E(\mathbf{n})$ over a grid of directions and plotting
-$E(\mathbf{n})\,\mathbf{n}$ gives a surface whose shape shows the anisotropy; a sphere means
-isotropy. The function `directional_young` in [`visualization.ipynb`](./visualization.ipynb)
-does this.
+Converting the Voigt compliance to $S_{ijkl}$ divides the shear entries by 2 (one shear index) or 4 (two shear indices).
+Evaluating $E(\mathbf{n})$ over a grid of directions and plotting $E(\mathbf{n})\,\mathbf{n}$ gives a surface whose shape shows the anisotropy; a sphere means isotropy.
 
 ### Energy-ratio-based anisotropy measure
 
-The anisotropy of each $\mathbf{C}$ is condensed into one number, the energy-ratio-based
-measure of elastic anisotropy
-([Fang et al., 2019](https://doi.org/10.1103/PhysRevLett.122.045502)). Take a strain state
-$\boldsymbol{\varepsilon}$ and apply it in every orientation $\mathbf{R}$. The strain energy
-density $\tfrac{1}{2}(\mathbf{R}\boldsymbol{\varepsilon})^{T}\mathbf{C}(\mathbf{R}\boldsymbol{\varepsilon})$
-then varies between a highest and a lowest value. The measure is the largest such ratio over
-all strain states, minus one:
+The anisotropy of each $\mathbf{C}$ is condensed into one number, the energy-ratio-based measure of elastic anisotropy [](doi:10.1103/PhysRevLett.122.045502).
+Take a strain state $\boldsymbol{\varepsilon}$ and apply it in every orientation $\mathbf{R}$.
+The strain energy density $\tfrac{1}{2}(\mathbf{R}\boldsymbol{\varepsilon})^{T}\mathbf{C}(\mathbf{R}\boldsymbol{\varepsilon})$ then varies between a highest and a lowest value.
+The measure is the largest such ratio over all strain states, minus one:
 
 $$
 A_{\text{energy ratio}} = \max_{\boldsymbol{\varepsilon}}
@@ -221,17 +193,9 @@ A_{\text{energy ratio}} = \max_{\boldsymbol{\varepsilon}}
      {\min_{\mathbf{R}} \, (\mathbf{R}\boldsymbol{\varepsilon})^{T} \mathbf{C} \, (\mathbf{R}\boldsymbol{\varepsilon})} - 1
 $$ (eq:energy-ratio)
 
-$A_{\text{energy ratio}} = 0$ means every strain state stores the same energy in every
-orientation, i.e. the material is isotropic. It becomes infinite when some deformation costs no
-energy in one orientation but a finite energy in another. The number depends neither on the
-coordinate system nor on the scale of $\mathbf{C}$. [`energy_ratio.py`](./energy_ratio.py)
-implements it:
-
-```python
-from energy_ratio import energy_ratio_based_measure
-
-A = energy_ratio_based_measure(C)
-```
+$A_{\text{energy ratio}} = 0$ means every strain state stores the same energy in every orientation, i.e. the material is isotropic.
+It becomes infinite when some deformation costs no energy in one orientation but a finite energy in another.
+The number depends neither on the coordinate system nor on the scale of $\mathbf{C}$.
 
 ## Results
 
@@ -263,10 +227,9 @@ two columns are material sets 1 and 2. Axes $x$, $y$, $z$ are the SG axes, as in
 
 ## Summary
 
-- Four modeling tools, two hand-over formats (Abaqus decks and Gmsh meshes with SG manifests),
-  one homogenization pipeline: `sgio.convert` → `sgio.run` → `read_output_model`.
-- The postprocessing works on $\mathbf{C}$ and $\rho$ alone, so a honeycomb, a fibre composite,
-  a lattice and a textile are compared directly.
+- Four modeling tools, two hand-over formats (Abaqus decks and Gmsh meshes with SG manifests), one homogenization pipeline: `sgio.convert` → `sgio.run` → `read_output_model`.
+- The postprocessing works on $\mathbf{C}$ and $\rho$ alone, so a honeycomb, a fibre composite, a lattice and a textile are compared directly.
+- This example can be extended to efficiently screen large families of microstructures and evaluate their effective properties.
 
 ## Files and how to run
 
@@ -318,7 +281,7 @@ The pipeline in `workflow/` needs these programs, installed separately:
 |---|---|---|
 | [uv](https://docs.astral.sh/uv/) | all Python environments | creates each environment from its `pyproject.toml`, downloading the right Python version |
 | Abaqus/CAE (2025 used here) | `builders/abaqus_honeycomb/` | `abaqus` command on `PATH`; the script runs in Abaqus's own Python and only writes the `.inp` file |
-| [TexGen](https://github.com/louisepb/TexGen) | `builders/texgen_weave/` | Windows installer at `C:\Program Files\TexGen`; its Python bindings are compiled for CPython 3.9 and are loaded from there, not from PyPI |
+| TexGen | `builders/texgen_weave/` | Windows installer at `C:\Program Files\TexGen`; its Python bindings are compiled for CPython 3.9 and are loaded from there, not from PyPI |
 | SwiftComp 2.1 | `run.py` | `swiftcomp` command on `PATH` |
 
 Each builder has its own Python environment because the tools' requirements conflict:
@@ -354,10 +317,15 @@ own VTK build into the same package folder as pyvista's; reinstalling `vtk` rest
 consistent set. For the same reason `build_all.py` runs the TPMS builder with `uv run --no-sync`, so the fix is not undone.
 `build_all.py microgen_tpms` builds a single model family.
 
-## References
+(links)=
+## Links
 
-- Fang, Y., Wang, Y., Imtiaz, H., Liu, B., & Gao, H. (2019). Energy-ratio-based measure of
-  elastic anisotropy. *Physical Review Letters*, 122, 045502.
-  [doi:10.1103/PhysRevLett.122.045502](https://doi.org/10.1103/PhysRevLett.122.045502)
-- [sgio](https://github.com/wenbinyugroup/sgio), [GmshModel](https://github.com/NEFM-TUDresden/gmshModel),
-  [microgen](https://github.com/3MAH/microgen), [TexGen](https://github.com/louisepb/TexGen)
+| Tool | Homepage / docs | Repository | Paper |
+|---|---|---|---|
+| SwiftComp | [analyswift.com](https://analyswift.com/swiftcomp-vamuch-micromechanics-modeling-of-heterogeneous-materials-2/) | | [](doi:10.2140/jomms.2016.11.379) |
+| sgio | [docs](https://wenbinyugroup.github.io/sgio/) | [GitHub](https://github.com/wenbinyugroup/sgio) | |
+| Abaqus/CAE | [3ds.com](https://www.3ds.com/products/simulia/abaqus) | | |
+| Gmsh | [gmsh.info](https://gmsh.info/) | [GitLab](https://gitlab.onelab.info/gmsh/gmsh) | [](doi:10.1002/nme.2579) |
+| GmshModel | [docs](https://gmshmodel.readthedocs.io/en/latest/) | [GitHub](https://github.com/NEFM-TUDresden/GmshModel) | |
+| microgen | [docs](https://microgen.readthedocs.io/en/latest/) | [GitHub](https://github.com/3MAH/microgen) | [](doi:10.5281/zenodo.6793573) |
+| TexGen | [texgen.sourceforge.io](https://texgen.sourceforge.io/index.php/Main_Page) | [GitHub](https://github.com/louisepb/TexGen) | [](doi:10.4028/www.scientific.net/AMR.331.44) |

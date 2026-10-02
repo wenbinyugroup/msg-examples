@@ -23,7 +23,7 @@ This collection demonstrates the use of VABS and SwiftComp for structural analys
 :::{card} Typical Microstructural Modeling and Homogenization
 :link: ./examples/multi_builder_anisotropy/multi_builder_anisotropy.md
 
-![]()
+![](./examples/multi_builder_anisotropy/images/sg_models.png)
 
 :::
 
